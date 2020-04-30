@@ -5,6 +5,7 @@ import {
   ValueOrPromise,
 } from '@loopback/core';
 import {juggler} from '@loopback/repository';
+
 import config from './session.datasource.config.json';
 
 @lifeCycleObserver('datasource')
@@ -14,7 +15,7 @@ export class SessionDataSource extends juggler.DataSource
 
   constructor(
     @inject('datasources.config.session', {optional: true})
-    dsConfig: object = config,
+      dsConfig: object = config,
   ) {
     super(dsConfig);
   }
