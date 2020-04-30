@@ -10,6 +10,8 @@ packages/*/dist
 extensions/*/dist
 examples/*/dist
 benchmark/dist
+dist/
+dist
 **/package
 .sandbox
 packages/tsdocs/fixtures/monorepo/docs
