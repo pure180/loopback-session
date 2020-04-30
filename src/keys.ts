@@ -7,11 +7,11 @@ import { SessionStore } from './services';
 import { SessionOptions } from './types';
 
 export namespace SessionBindings {
-  export const COMPONENT = BindingKey.create<SessionComponent>(
+  export const COMPONENT = BindingKey.create<SessionComponent<any>>(
     'components.SessionComponent',
   );
 
-  export const DATA_SOURCE = 'datasources.SessionDataSource';
+  export const DATA_SOURCE = 'datasources.session';
 
   export const MEMORY = BindingKey.create<SessionStore<Express.SessionData>>(
     'service.SessionData',
