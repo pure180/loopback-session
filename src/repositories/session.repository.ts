@@ -1,16 +1,15 @@
-import { inject } from '@loopback/core';
-import { DefaultCrudRepository } from '@loopback/repository';
-
-import { SessionDataSource } from '../datasources';
-import { SessionBindings } from '../keys';
+import { DefaultCrudRepository, juggler } from '@loopback/repository';
 import { Session } from '../models';
+import { inject } from '@loopback/core';
+import { SessionBindings } from '../keys';
 
 export class SessionRepository extends DefaultCrudRepository<
   Session,
   typeof Session.prototype.sessionID
 > {
   constructor(
-    @inject(SessionBindings.DATA_SOURCE) dataSource: SessionDataSource,
+    @inject(SessionBindings.DATA_SOURCE) 
+      dataSource: juggler.DataSource,
   ) {
     super(Session, dataSource);
   }
