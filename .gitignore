@@ -10,8 +10,6 @@ packages/*/dist
 extensions/*/dist
 examples/*/dist
 benchmark/dist
-dist/
-dist
 **/package
 .sandbox
 packages/tsdocs/fixtures/monorepo/docs
@@ -38,3 +36,5 @@ packages/tsdocs/fixtures/monorepo/packages/pkg1/docs
 # Docs preview
 docs/_loopback.io/
 docs/_preview/
+
+/dist
