@@ -1,12 +1,17 @@
 # @loopback/session
 
-## This package is still work in progress
+## This package is *Work In Progress*
 
-Please note this package has the user service is a reference implementation, not
-recommended for production. You can follow the guide in section
-[Customizing User](#customizing-user) to replace it.
+**Bucket list**
+ - optimize code
+ - create unit tests
+ - Create inline documentations
+ - Improve the documentation
+ - Check the requirements for extending the loopback base packages
 
 ## Architecture Overview
+
+Upcoming next
 
 ## Usage
 
