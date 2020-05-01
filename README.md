@@ -14,8 +14,6 @@ To use this component, you need to have an existing LoopBack 4 application.
 
 - create app: run `lb4 app`
 
-Next create a data source 
-
 Next enable the session system in your application:
 
 - register session component in application
@@ -33,11 +31,12 @@ export class MyApplication extends BootMixin(
   constructor(options: ApplicationConfig = {}) {
     super(options);
 
-    // - enable session -
-
-    //
+    // - configure the session -
     this.configure<SessionConfig>(SessionBindings.COMPONENT).to({
+      // Assign your existing data source
       DataSource: MemoryDataSource,
+
+      // Assign the session configuration
       session: {
         secret: 'xyz_12345678_zyx',
         resave: false,
@@ -46,6 +45,7 @@ export class MyApplication extends BootMixin(
       }
     });
 
+    // - register the session Component
     this.component(SessionComponent);
 
     // Set up the custom sequence
@@ -64,7 +64,7 @@ export class MyApplication extends BootMixin(
 </p>
 </details>
 
-- Setup your sequence and wrap the request and response the session provider.
+- Setup your sequence and wrap the request and response with the session provider.
 
 <details>
 <summary><strong>Check The Code</strong></summary>
