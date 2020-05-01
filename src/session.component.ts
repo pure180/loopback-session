@@ -24,9 +24,6 @@ export class SessionComponent<DataSource extends juggler.DataSource> implements 
       [SessionBindings.PROVIDER.key]: SessionProvider,
     };
 
-    console.dir(this)
-    console.dir(sessionConfig)
-
     this.bindings.push(...[
       Binding.bind<DataSource>(SessionBindings.DATA_SOURCE).toClass(sessionConfig.DataSource),
       Binding.bind(SessionBindings.COOKIE_OPTIONS.key).to(sessionConfig.cookie || {}),
