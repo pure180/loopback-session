@@ -37,8 +37,8 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
    * @param sessionRepository
    */
   constructor(
-    @repository(SessionRepository) protected sessionRepository: SessionRepository,
     @inject(SessionBindings.COOKIE_OPTIONS.key) private options: CookieSerializeOptions,
+    @repository(SessionRepository) protected sessionRepository: SessionRepository,
   ) {
     // Call EventEmitter
     super();
