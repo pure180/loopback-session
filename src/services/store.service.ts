@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable prefer-spread */
 import { inject } from '@loopback/core';
 import { repository } from '@loopback/repository';
 import { HttpErrors } from '@loopback/rest';
@@ -13,24 +11,23 @@ import { Session as SessionModel } from '../models';
 import { SessionRepository } from '../repositories';
 import { SessionRequest } from '../types';
 
-const debug = debugFactory('loopback:session');
+import { Cookie, Session, SessionData } from 'express-session';
 
-const Cookie = require('express-session/session/cookie');
-const Session = require('express-session/session/session');
+const debug = debugFactory('loopback:session');
 
 const defer = typeof setImmediate === 'function'
   ? setImmediate
   // eslint-disable-next-line prefer-rest-params
   : function(fn: Function){ process.nextTick(fn.bind.apply(fn, arguments as any)) }
 
-type SessionStoreSession<SessionData extends Express.SessionData> = {[key: string]: SessionData | string}
+type SessionStoreSession<S extends SessionData> = {[key: string]: S | string}
 
 /**
  *
  */
-export class SessionStore<SessionData extends Express.SessionData> extends EventEmitter {
+export class SessionStore<S extends SessionData> extends EventEmitter {
   // Object that holds the current session
-  sessions: SessionStoreSession<SessionData>;
+  sessions: SessionStoreSession<S>;
 
   /**
    *
@@ -51,7 +48,7 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
    *
    * @param callback
    */
-  public all (callback: (err: any, obj?: { [sid: string]: Express.SessionData; } | null) => void) {
+  public all (callback: (err: any, obj?: { [sid: string]: SessionData; } | null) => void) {
     debug('"Store": All')
     const sessionIds = Object.keys(this.sessions);
     const sessions = Object.create(null);
@@ -67,7 +64,7 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
     sessionIds.forEach(async (sessionId) => forEachSession(sessionId));
 
     if (callback) {
-      defer(callback, null, sessions)
+      defer(callback)
     }
   }
 
@@ -81,13 +78,13 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
 
   public createSession (
     request: Express.Request,
-    session: Express.SessionData
-  ): Express.Session | undefined {
+    session: SessionData
+  ): Session | undefined {
     debug('"Store": createSession')
     const expires = session.cookie.expires
     const originalMaxAge = session.cookie.originalMaxAge
 
-    session.cookie = new Cookie(this.options || session.cookie);
+    session.cookie = new Cookie();
 
     if (typeof expires === 'string') {
       session.cookie.expires = new Date(expires);
@@ -95,7 +92,7 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
 
     session.cookie.originalMaxAge = originalMaxAge;
 
-    request.session = new Session(request, session);
+    // request.session = 
 
     return request.session;
   };
@@ -122,8 +119,8 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
   public get (sessionId: string, callback: (error: any, session?: SessionData) => void) {
     debug('"Store": get')
     this.getSession(sessionId)
-      .then(session => {
-        defer(callback, null, session);
+      .then(() => {
+        defer(callback);
       })
       .catch(error => {
         throw new HttpErrors.BadRequest(error)
@@ -143,7 +140,7 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
     });
   }
 
-  public load (sessionId: string, callback: (error?: any, session?: Express.SessionData | null) => any) {
+  public load (sessionId: string, callback: (error?: any, session?: SessionData | null) => any) {
     debug('"Store": load')
     const load = (error: any, session?: SessionData) => {
       if (error) {
@@ -170,14 +167,14 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
 
   public set (
     sessionID: string,
-    sessionData: Express.SessionData,
+    sessionData: SessionData,
     callback?: (err?: any) => void
   ) {
     debug('"Store": set')
 
-    if (sessionData.request) {
-      delete sessionData.request;
-    }
+    // if (sessionData.request) {
+    //   delete sessionData.request;
+    // }
 
     const data: Partial<SessionModel> = {
       sessionID,
@@ -213,7 +210,7 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
       });
   }
 
-  public touch (sessionId: string, session: Express.SessionData, callback?: (err?: any) => void) {
+  public touch (sessionId: string, session: SessionData, callback?: (err?: any) => void) {
 
     debug('"Store": touch')
     const emptyCallback = () => {};
@@ -266,5 +263,9 @@ export class SessionStore<SessionData extends Express.SessionData> extends Event
     }
 
     return session;
+  }
+
+  public regenerate(sessionId: string, callback: (err?: any) => void) {
+
   }
 }

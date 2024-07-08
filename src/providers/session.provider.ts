@@ -1,16 +1,16 @@
 import { inject, Provider } from '@loopback/context';
 import { Response } from 'express';
-import expressSession from 'express-session';
+import expressSession, { Session, SessionOptions } from 'express-session';
 
 import { SessionBindings } from '../keys';
 import { SessionStore } from '../services';
 import { SessionFn, SessionRequest } from '../types';
+import session from 'express-session';
 
 
 export class SessionProvider implements Provider<SessionFn<SessionRequest>> {
   constructor(
-    @inject(SessionBindings.MEMORY) private store: SessionStore<Express.Session>,
-    @inject(SessionBindings.OPTIONS.key) private options: expressSession.SessionOptions,
+    @inject(SessionBindings.OPTIONS.key) private options: SessionOptions,
   ) {}
 
   value() {
@@ -18,9 +18,9 @@ export class SessionProvider implements Provider<SessionFn<SessionRequest>> {
   }
 
   async session(request: SessionRequest, response: Response) {
-    const options: expressSession.SessionOptions = {
+    const options = {
       ...this.options,
-      store: this.store,
+      store: new session.MemoryStore(),
     }
 
     await this.initializeSession(options, request, response);
@@ -29,7 +29,7 @@ export class SessionProvider implements Provider<SessionFn<SessionRequest>> {
   }
 
   private initializeSession(
-    options: expressSession.SessionOptions,
+    options: SessionOptions,
     request: SessionRequest,
     response: Response,
   ): Promise<{
