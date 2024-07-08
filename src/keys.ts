@@ -4,7 +4,8 @@ import { CookieSerializeOptions } from 'cookie';
 import { SessionProvider } from './providers';
 import { SessionComponent } from './session.component';
 import { SessionStore } from './services';
-import { SessionOptions } from './types';
+import { SessionData } from 'express-session';
+import { SessionOptions } from 'http2';
 
 export namespace SessionBindings {
   export const COMPONENT = BindingKey.create<SessionComponent<any>>(
@@ -13,7 +14,7 @@ export namespace SessionBindings {
 
   export const DATA_SOURCE = 'datasources.session';
 
-  export const MEMORY = BindingKey.create<SessionStore<Express.SessionData>>(
+  export const MEMORY = BindingKey.create<SessionStore<SessionData>>(
     'service.SessionData',
   );
 

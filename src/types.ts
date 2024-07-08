@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
-import expressSession, { MemoryStore } from 'express-session';
+import expressSession, { MemoryStore, SessionOptions } from 'express-session';
 import { CookieSerializeOptions } from 'cookie';
 import { juggler } from '@loopback/repository';
 import { Constructor } from '@loopback/context';
 
-export interface SessionRequest extends Request {
+export type SessionRequest = Omit<Request, 'secret'> & {
   secret: string;
   sessionStore: MemoryStore;
 }
-
-export type SessionOptions = expressSession.SessionOptions;
 
 export interface SessionFn<Req extends SessionRequest> {
   (request: Req, response: Response): Promise<{
